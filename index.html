@@ -1,0 +1,751 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GigFlow - Earn & Hire</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #0a0a0a;
+            color: #ffffff;
+        }
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Space Grotesk', sans-serif;
+        }
+        .gradient-text {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .glow {
+            box-shadow: 0 0 20px rgba(102, 126, 234, 0.3);
+        }
+        .hover-lift {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .hover-lift:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 40px rgba(102, 126, 234, 0.2);
+        }
+        .marquee {
+            animation: marquee 30s linear infinite;
+        }
+        @keyframes marquee {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+        .category-pill {
+            transition: all 0.3s ease;
+        }
+        .category-pill:hover {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            transform: scale(1.05);
+        }
+        .tab-active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(5px);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        .modal.active {
+            display: flex;
+        }
+        .earnings-counter {
+            font-variant-numeric: tabular-nums;
+        }
+    </style>
+</head>
+<body class="min-h-screen overflow-x-hidden">
+
+    <!-- Navigation -->
+    <nav class="fixed top-0 w-full z-50 glass-card border-b border-white/10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center space-x-2">
+                    <i data-lucide="zap" class="w-8 h-8 text-purple-400"></i>
+                    <span class="text-2xl font-bold tracking-tight">GigFlow</span>
+                </div>
+                
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="#explore" class="text-gray-300 hover:text-white transition">Explore</a>
+                    <a href="#how-it-works" class="text-gray-300 hover:text-white transition">How it Works</a>
+                    <a href="#pricing" class="text-gray-300 hover:text-white transition">Pricing</a>
+                </div>
+
+                <div class="flex items-center space-x-4">
+                    <button onclick="openModal('loginModal')" class="text-gray-300 hover:text-white transition">Sign In</button>
+                    <button onclick="openModal('signupModal')" class="bg-gradient-to-r from-purple-600 to-blue-600 px-6 py-2 rounded-full font-medium hover:shadow-lg hover:shadow-purple-500/30 transition transform hover:scale-105">
+                        Get Started
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="relative pt-32 pb-20 px-4 overflow-hidden">
+        <div class="absolute inset-0 bg-gradient-to-b from-purple-900/20 to-transparent"></div>
+        <div class="absolute top-20 left-1/4 w-96 h-96 bg-purple-600/20 rounded-full blur-3xl"></div>
+        <div class="absolute bottom-0 right-1/4 w-96 h-96 bg-blue-600/20 rounded-full blur-3xl"></div>
+        
+        <div class="relative max-w-7xl mx-auto text-center">
+            <div class="inline-flex items-center space-x-2 px-4 py-2 rounded-full bg-white/5 border border-white/10 mb-8 animate-pulse">
+                <span class="w-2 h-2 bg-green-400 rounded-full"></span>
+                <span class="text-sm text-gray-300">Over <span class="earnings-counter text-white font-bold" id="totalEarnings">$2,458,392</span> earned by freelancers this month</span>
+            </div>
+            
+            <h1 class="text-5xl md:text-7xl font-bold mb-6 leading-tight">
+                Turn Your Skills Into <br>
+                <span class="gradient-text">Passive Income</span>
+            </h1>
+            
+            <p class="text-xl text-gray-400 max-w-2xl mx-auto mb-10">
+                Join millions of freelancers earning money online. Offer your services, sell digital products, or hire top talent for your projects.
+            </p>
+            
+            <div class="flex flex-col sm:flex-row justify-center gap-4 mb-12">
+                <button onclick="switchTab('earn')" class="px-8 py-4 bg-gradient-to-r from-purple-600 to-blue-600 rounded-full font-semibold text-lg hover:shadow-2xl hover:shadow-purple-500/40 transition transform hover:scale-105 flex items-center justify-center space-x-2">
+                    <i data-lucide="dollar-sign" class="w-5 h-5"></i>
+                    <span>Start Earning</span>
+                </button>
+                <button onclick="switchTab('hire')" class="px-8 py-4 glass-card rounded-full font-semibold text-lg hover:bg-white/10 transition flex items-center justify-center space-x-2">
+                    <i data-lucide="search" class="w-5 h-5"></i>
+                    <span>Find Talent</span>
+                </button>
+            </div>
+
+            <!-- Trust Badges -->
+            <div class="flex justify-center items-center space-x-8 text-gray-500 text-sm">
+                <div class="flex items-center space-x-2">
+                    <i data-lucide="shield-check" class="w-5 h-5"></i>
+                    <span>Secure Payments</span>
+                </div>
+                <div class="flex items-center space-x-2">
+                    <i data-lucide="clock" class="w-5 h-5"></i>
+                    <span>24/7 Support</span>
+                </div>
+                <div class="flex items-center space-x-2">
+                    <i data-lucide="award" class="w-5 h-5"></i>
+                    <span>Verified Talent</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Live Activity Ticker -->
+    <div class="border-y border-white/10 bg-black/50 overflow-hidden py-4">
+        <div class="marquee whitespace-nowrap flex space-x-8 text-sm text-gray-400">
+            <span class="flex items-center space-x-2"><span class="w-2 h-2 bg-green-400 rounded-full animate-pulse"></span><span>Sarah just earned $150 for Logo Design</span></span>
+            <span class="flex items-center space-x-2"><span class="w-2 h-2 bg-blue-400 rounded-full animate-pulse"></span><span>Mike completed a $500 Web Development project</span></span>
+            <span class="flex items-center space-x-2"><span class="w-2 h-2 bg-purple-400 rounded-full animate-pulse"></span><span>Emma sold 12 copies of her eBook ($360)</span></span>
+            <span class="flex items-center space-x-2"><span class="w-2 h-2 bg-yellow-400 rounded-full animate-pulse"></span><span>John received a $2000 video editing contract</span></span>
+            <span class="flex items-center space-x-2"><span class="w-2 h-2 bg-pink-400 rounded-full animate-pulse"></span><span>Lisa booked 5 new consulting sessions ($750)</span></span>
+            <span class="flex items-center space-x-2"><span class="w-2 h-2 bg-green-400 rounded-full animate-pulse"></span><span>Sarah just earned $150 for Logo Design</span></span>
+            <span class="flex items-center space-x-2"><span class="w-2 h-2 bg-blue-400 rounded-full animate-pulse"></span><span>Mike completed a $500 Web Development project</span></span>
+            <span class="flex items-center space-x-2"><span class="w-2 h-2 bg-purple-400 rounded-full animate-pulse"></span><span>Emma sold 12 copies of her eBook ($360)</span></span>
+        </div>
+    </div>
+
+    <!-- Main Content Tabs -->
+    <section class="max-w-7xl mx-auto px-4 py-16" id="explore">
+        <!-- Tab Navigation -->
+        <div class="flex justify-center mb-12">
+            <div class="glass-card rounded-full p-1 flex space-x-1">
+                <button id="tab-earn" onclick="switchTab('earn')" class="tab-active px-8 py-3 rounded-full font-medium transition-all duration-300 flex items-center space-x-2">
+                    <i data-lucide="trending-up" class="w-4 h-4"></i>
+                    <span>I Want to Earn</span>
+                </button>
+                <button id="tab-hire" onclick="switchTab('hire')" class="px-8 py-3 rounded-full font-medium text-gray-400 hover:text-white transition-all duration-300 flex items-center space-x-2">
+                    <i data-lucide="users" class="w-4 h-4"></i>
+                    <span>I Want to Hire</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Earn Tab Content -->
+        <div id="content-earn" class="space-y-16">
+            <!-- Categories -->
+            <div>
+                <h3 class="text-2xl font-bold mb-8 text-center">Popular Ways to Earn</h3>
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    <div class="category-pill glass-card p-6 rounded-2xl cursor-pointer text-center group">
+                        <div class="w-12 h-12 bg-purple-500/20 rounded-full flex items-center justify-center mx-auto mb-3 group-hover:bg-white/20 transition">
+                            <i data-lucide="palette" class="w-6 h-6 text-purple-400"></i>
+                        </div>
+                        <h4 class="font-semibold mb-1">Design</h4>
+                        <p class="text-xs text-gray-400">$50-500/project</p>
+                    </div>
+                    <div class="category-pill glass-card p-6 rounded-2xl cursor-pointer text-center group">
+                        <div class="w-12 h-12 bg-blue-500/20 rounded-full flex items-center justify-center mx-auto mb-3 group-hover:bg-white/20 transition">
+                            <i data-lucide="code" class="w-6 h-6 text-blue-400"></i>
+                        </div>
+                        <h4 class="font-semibold mb-1">Development</h4>
+                        <p class="text-xs text-gray-400">$100-2000/project</p>
+                    </div>
+                    <div class="category-pill glass-card p-6 rounded-2xl cursor-pointer text-center group">
+                        <div class="w-12 h-12 bg-pink-500/20 rounded-full flex items-center justify-center mx-auto mb-3 group-hover:bg-white/20 transition">
+                            <i data-lucide="pen-tool" class="w-6 h-6 text-pink-400"></i>
+                        </div>
+                        <h4 class="font-semibold mb-1">Writing</h4>
+                        <p class="text-xs text-gray-400">$0.10-1/word</p>
+                    </div>
+                    <div class="category-pill glass-card p-6 rounded-2xl cursor-pointer text-center group">
+                        <div class="w-12 h-12 bg-yellow-500/20 rounded-full flex items-center justify-center mx-auto mb-3 group-hover:bg-white/20 transition">
+                            <i data-lucide="video" class="w-6 h-6 text-yellow-400"></i>
+                        </div>
+                        <h4 class="font-semibold mb-1">Video</h4>
+                        <p class="text-xs text-gray-400">$100-1000/project</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Featured Gigs -->
+            <div>
+                <div class="flex justify-between items-center mb-8">
+                    <h3 class="text-2xl font-bold">Trending Gigs</h3>
+                    <button class="text-purple-400 hover:text-purple-300 flex items-center space-x-1">
+                        <span>View All</span>
+                        <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                    </button>
+                </div>
+                
+                <div class="grid md:grid-cols-3 gap-6">
+                    <!-- Gig Card 1 -->
+                    <div class="glass-card rounded-2xl overflow-hidden hover-lift group cursor-pointer" onclick="openModal('gigModal')">
+                        <div class="h-48 bg-gradient-to-br from-purple-600 to-blue-600 relative overflow-hidden">
+                            <div class="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition"></div>
+                            <div class="absolute bottom-4 left-4 right-4">
+                                <span class="px-3 py-1 bg-black/50 backdrop-blur rounded-full text-xs font-medium">Web Design</span>
+                            </div>
+                        </div>
+                        <div class="p-6">
+                            <div class="flex items-center space-x-3 mb-3">
+                                <div class="w-10 h-10 rounded-full bg-gradient-to-br from-pink-400 to-purple-400"></div>
+                                <div>
+                                    <h4 class="font-semibold text-sm">Alex Morgan</h4>
+                                    <div class="flex items-center text-xs text-yellow-400">
+                                        <i data-lucide="star" class="w-3 h-3 fill-current"></i>
+                                        <span class="ml-1">4.9 (128 reviews)</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <h3 class="font-bold mb-2 group-hover:text-purple-400 transition">I will design a modern website UI/UX</h3>
+                            <p class="text-gray-400 text-sm mb-4">Starting from scratch or redesigning existing sites with Figma prototypes.</p>
+                            <div class="flex justify-between items-center pt-4 border-t border-white/10">
+                                <span class="text-xs text-gray-500">Starting at</span>
+                                <span class="text-xl font-bold text-green-400">$299</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Gig Card 2 -->
+                    <div class="glass-card rounded-2xl overflow-hidden hover-lift group cursor-pointer" onclick="openModal('gigModal')">
+                        <div class="h-48 bg-gradient-to-br from-pink-600 to-red-600 relative overflow-hidden">
+                            <div class="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition"></div>
+                            <div class="absolute bottom-4 left-4 right-4">
+                                <span class="px-3 py-1 bg-black/50 backdrop-blur rounded-full text-xs font-medium">Content Writing</span>
+                            </div>
+                        </div>
+                        <div class="p-6">
+                            <div class="flex items-center space-x-3 mb-3">
+                                <div class="w-10 h-10 rounded-full bg-gradient-to-br from-yellow-400 to-orange-400"></div>
+                                <div>
+                                    <h4 class="font-semibold text-sm">Jessica Chen</h4>
+                                    <div class="flex items-center text-xs text-yellow-400">
+                                        <i data-lucide="star" class="w-3 h-3 fill-current"></i>
+                                        <span class="ml-1">5.0 (89 reviews)</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <h3 class="font-bold mb-2 group-hover:text-purple-400 transition">I will write SEO-optimized blog posts</h3>
+                            <p class="text-gray-400 text-sm mb-4">High-quality articles that rank on Google. Keyword research included.</p>
+                            <div class="flex justify-between items-center pt-4 border-t border-white/10">
+                                <span class="text-xs text-gray-500">Starting at</span>
+                                <span class="text-xl font-bold text-green-400">$75</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Gig Card 3 -->
+                    <div class="glass-card rounded-2xl overflow-hidden hover-lift group cursor-pointer" onclick="openModal('gigModal')">
+                        <div class="h-48 bg-gradient-to-br from-green-600 to-teal-600 relative overflow-hidden">
+                            <div class="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition"></div>
+                            <div class="absolute bottom-4 left-4 right-4">
+                                <span class="px-3 py-1 bg-black/50 backdrop-blur rounded-full text-xs font-medium">Video Editing</span>
+                            </div>
+                        </div>
+                        <div class="p-6">
+                            <div class="flex items-center space-x-3 mb-3">
+                                <div class="w-10 h-10 rounded-full bg-gradient-to-br from-green-400 to-cyan-400"></div>
+                                <div>
+                                    <h4 class="font-semibold text-sm">Marcus Johnson</h4>
+                                    <div class="flex items-center text-xs text-yellow-400">
+                                        <i data-lucide="star" class="w-3 h-3 fill-current"></i>
+                                        <span class="ml-1">4.8 (256 reviews)</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <h3 class="font-bold mb-2 group-hover:text-purple-400 transition">I will edit your YouTube videos professionally</h3>
+                            <p class="text-gray-400 text-sm mb-4">Color grading, sound design, motion graphics, and thumbnail included.</p>
+                            <div class="flex justify-between items-center pt-4 border-t border-white/10">
+                                <span class="text-xs text-gray-500">Starting at</span>
+                                <span class="text-xl font-bold text-green-400">$150</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- How to Start -->
+            <div class="glass-card rounded-3xl p-8 md:p-12 relative overflow-hidden">
+                <div class="absolute top-0 right-0 w-64 h-64 bg-purple-600/20 rounded-full blur-3xl"></div>
+                <div class="relative z-10">
+                    <h3 class="text-3xl font-bold mb-8 text-center">Start Earning in 3 Steps</h3>
+                    <div class="grid md:grid-cols-3 gap-8">
+                        <div class="text-center">
+                            <div class="w-16 h-16 bg-purple-600/20 rounded-2xl flex items-center justify-center mx-auto mb-4 text-2xl font-bold text-purple-400">1</div>
+                            <h4 class="font-bold mb-2">Create Your Gig</h4>
+                            <p class="text-gray-400 text-sm">Set up your profile and list the services you offer with clear pricing.</p>
+                        </div>
+                        <div class="text-center">
+                            <div class="w-16 h-16 bg-purple-600/20 rounded-2xl flex items-center justify-center mx-auto mb-4 text-2xl font-bold text-purple-400">2</div>
+                            <h4 class="font-bold mb-2">Get Orders</h4>
+                            <p class="text-gray-400 text-sm">Clients find you through search and hire you for their projects.</p>
+                        </div>
+                        <div class="text-center">
+                            <div class="w-16 h-16 bg-purple-600/20 rounded-2xl flex items-center justify-center mx-auto mb-4 text-2xl font-bold text-purple-400">3</div>
+                            <h4 class="font-bold mb-2">Get Paid</h4>
+                            <p class="text-gray-400 text-sm">Deliver great work and receive secure payments directly to your account.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Hire Tab Content -->
+        <div id="content-hire" class="space-y-16 hidden">
+            <!-- Search Bar -->
+            <div class="max-w-3xl mx-auto">
+                <div class="relative">
+                    <input type="text" placeholder="What service are you looking for?" class="w-full bg-white/5 border border-white/10 rounded-full py-4 px-6 pl-14 text-white placeholder-gray-500 focus:outline-none focus:border-purple-500 transition">
+                    <i data-lucide="search" class="absolute left-5 top-1/2 transform -translate-y-1/2 text-gray-500 w-5 h-5"></i>
+                    <button class="absolute right-2 top-1/2 transform -translate-y-1/2 bg-purple-600 px-6 py-2 rounded-full text-sm font-medium hover:bg-purple-700 transition">Search</button>
+                </div>
+            </div>
+
+            <!-- Top Freelancers -->
+            <div>
+                <h3 class="text-2xl font-bold mb-8">Top Rated Freelancers</h3>
+                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <!-- Freelancer Card -->
+                    <div class="glass-card rounded-2xl p-6 hover-lift cursor-pointer">
+                        <div class="flex items-start justify-between mb-4">
+                            <div class="flex items-center space-x-3">
+                                <div class="w-12 h-12 rounded-full bg-gradient-to-br from-blue-400 to-purple-400"></div>
+                                <div>
+                                    <h4 class="font-bold">David Kim</h4>
+                                    <p class="text-xs text-gray-400">Full Stack Developer</p>
+                                </div>
+                            </div>
+                            <span class="px-2 py-1 bg-green-500/20 text-green-400 text-xs rounded-full">Online</span>
+                        </div>
+                        <div class="flex items-center space-x-4 mb-4 text-sm">
+                            <span class="flex items-center text-yellow-400">
+                                <i data-lucide="star" class="w-4 h-4 fill-current mr-1"></i>
+                                4.9
+                            </span>
+                            <span class="text-gray-400">$85/hr</span>
+                            <span class="text-gray-400">156 jobs</span>
+                        </div>
+                        <div class="flex flex-wrap gap-2 mb-4">
+                            <span class="px-3 py-1 bg-white/5 rounded-full text-xs">React</span>
+                            <span class="px-3 py-1 bg-white/5 rounded-full text-xs">Node.js</span>
+                            <span class="px-3 py-1 bg-white/5 rounded-full text-xs">Python</span>
+                        </div>
+                        <button class="w-full py-2 border border-purple-600 text-purple-400 rounded-full hover:bg-purple-600 hover:text-white transition">Contact</button>
+                    </div>
+
+                    <div class="glass-card rounded-2xl p-6 hover-lift cursor-pointer">
+                        <div class="flex items-start justify-between mb-4">
+                            <div class="flex items-center space-x-3">
+                                <div class="w-12 h-12 rounded-full bg-gradient-to-br from-pink-400 to-red-400"></div>
+                                <div>
+                                    <h4 class="font-bold">Sarah Williams</h4>
+                                    <p class="text-xs text-gray-400">UI/UX Designer</p>
+                                </div>
+                            </div>
+                            <span class="px-2 py-1 bg-green-500/20 text-green-400 text-xs rounded-full">Online</span>
+                        </div>
+                        <div class="flex items-center space-x-4 mb-4 text-sm">
+                            <span class="flex items-center text-yellow-400">
+                                <i data-lucide="star" class="w-4 h-4 fill-current mr-1"></i>
+                                5.0
+                            </span>
+                            <span class="text-gray-400">$65/hr</span>
+                            <span class="text-gray-400">89 jobs</span>
+                        </div>
+                        <div class="flex flex-wrap gap-2 mb-4">
+                            <span class="px-3 py-1 bg-white/5 rounded-full text-xs">Figma</span>
+                            <span class="px-3 py-1 bg-white/5 rounded-full text-xs">Adobe XD</span>
+                            <span class="px-3 py-1 bg-white/5 rounded-full text-xs">Prototyping</span>
+                        </div>
+                        <button class="w-full py-2 border border-purple-600 text-purple-400 rounded-full hover:bg-purple-600 hover:text-white transition">Contact</button>
+                    </div>
+
+                    <div class="glass-card rounded-2xl p-6 hover-lift cursor-pointer">
+                        <div class="flex items-start justify-between mb-4">
+                            <div class="flex items-center space-x-3">
+                                <div class="w-12 h-12 rounded-full bg-gradient-to-br from-yellow-400 to-orange-400"></div>
+                                <div>
+                                    <h4 class="font-bold">Emily Rodriguez</h4>
+                                    <p class="text-xs text-gray-400">Marketing Expert</p>
+                                </div>
+                            </div>
+                            <span class="px-2 py-1 bg-gray-500/20 text-gray-400 text-xs rounded-full">Offline</span>
+                        </div>
+                        <div class="flex items-center space-x-4 mb-4 text-sm">
+                            <span class="flex items-center text-yellow-400">
+                                <i data-lucide="star" class="w-4 h-4 fill-current mr-1"></i>
+                                4.8
+                            </span>
+                            <span class="text-gray-400">$95/hr</span>
+                            <span class="text-gray-400">203 jobs</span>
+                        </div>
+                        <div class="flex flex-wrap gap-2 mb-4">
+                            <span class="px-3 py-1 bg-white/5 rounded-full text-xs">SEO</span>
+                            <span class="px-3 py-1 bg-white/5 rounded-full text-xs">Social Media</span>
+                            <span class="px-3 py-1 bg-white/5 rounded-full text-xs">Ads</span>
+                        </div>
+                        <button class="w-full py-2 border border-purple-600 text-purple-400 rounded-full hover:bg-purple-600 hover:text-white transition">Contact</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Post a Job CTA -->
+            <div class="glass-card rounded-3xl p-8 text-center relative overflow-hidden">
+                <div class="absolute inset-0 bg-gradient-to-r from-purple-600/20 to-blue-600/20"></div>
+                <div class="relative z-10">
+                    <h3 class="text-2xl font-bold mb-4">Need something specific?</h3>
+                    <p class="text-gray-400 mb-6 max-w-xl mx-auto">Post a job for free and let top freelancers come to you with their proposals.</p>
+                    <button class="bg-gradient-to-r from-purple-600 to-blue-600 px-8 py-3 rounded-full font-semibold hover:shadow-lg hover:shadow-purple-500/30 transition transform hover:scale-105">
+                        Post a Job for Free
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pricing Section -->
+    <section class="max-w-7xl mx-auto px-4 py-16" id="pricing">
+        <div class="text-center mb-12">
+            <h2 class="text-3xl font-bold mb-4">Simple, Transparent Pricing</h2>
+            <p class="text-gray-400">Choose the plan that works for your earning goals</p>
+        </div>
+
+        <div class="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+            <!-- Free Plan -->
+            <div class="glass-card rounded-2xl p-8 hover-lift">
+                <h3 class="text-xl font-bold mb-2">Starter</h3>
+                <p class="text-gray-400 text-sm mb-6">Perfect for beginners</p>
+                <div class="text-4xl font-bold mb-6">Free</div>
+                <ul class="space-y-3 mb-8 text-sm text-gray-300">
+                    <li class="flex items-center"><i data-lucide="check" class="w-4 h-4 text-green-400 mr-2"></i>3 active gigs</li>
+                    <li class="flex items-center"><i data-lucide="check" class="w-4 h-4 text-green-400 mr-2"></i>Basic analytics</li>
+                    <li class="flex items-center"><i data-lucide="check" class="w-4 h-4 text-green-400 mr-2"></i>Standard support</li>
+                    <li class="flex items-center"><i data-lucide="check" class="w-4 h-4 text-green-400 mr-2"></i>20% platform fee</li>
+                </ul>
+                <button class="w-full py-3 border border-white/20 rounded-full font-medium hover:bg-white/5 transition">Get Started</button>
+            </div>
+
+            <!-- Pro Plan -->
+            <div class="glass-card rounded-2xl p-8 border-2 border-purple-500 relative hover-lift glow">
+                <div class="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-gradient-to-r from-purple-600 to-blue-600 px-4 py-1 rounded-full text-xs font-bold">MOST POPULAR</div>
+                <h3 class="text-xl font-bold mb-2">Pro</h3>
+                <p class="text-gray-400 text-sm mb-6">For serious freelancers</p>
+                <div class="text-4xl font-bold mb-6">$29<span class="text-lg text-gray-400">/month</span></div>
+                <ul class="space-y-3 mb-8 text-sm text-gray-300">
+                    <li class="flex items-center"><i data-lucide="check" class="w-4 h-4 text-green-400 mr-2"></i>Unlimited gigs</li>
+                    <li class="flex items-center"><i data-lucide="check" class="w-4 h-4 text-green-400 mr-2"></i>Priority ranking</li>
+                    <li class="flex items-center"><i data-lucide="check" class="w-4 h-4 text-green-400 mr-2"></i>Advanced analytics</li>
+                    <li class="flex items-center"><i data-lucide="check" class="w-4 h-4 text-green-400 mr-2"></i>10% platform fee</li>
+                    <li class="flex items-center"><i data-lucide="check" class="w-4 h-4 text-green-400 mr-2"></i>24/7 priority support</li>
+                </ul>
+                <button class="w-full py-3 bg-gradient-to-r from-purple-600 to-blue-600 rounded-full font-medium hover:shadow-lg transition">Upgrade Now</button>
+            </div>
+
+            <!-- Enterprise Plan -->
+            <div class="glass-card rounded-2xl p-8 hover-lift">
+                <h3 class="text-xl font-bold mb-2">Business</h3>
+                <p class="text-gray-400 text-sm mb-6">For teams & agencies</p>
+                <div class="text-4xl font-bold mb-6">$99<span class="text-lg text-gray-400">/month</span></div>
+                <ul class="space-y-3 mb-8 text-sm text-gray-300">
+                    <li class="flex items-center"><i data-lucide="check" class="w-4 h-4 text-green-400 mr-2"></i>Everything in Pro</li>
+                    <li class="flex items-center"><i data-lucide="check" class="w-4 h-4 text-green-400 mr-2"></i>Team collaboration</li>
+                    <li class="flex items-center"><i data-lucide="check" class="w-4 h-4 text-green-400 mr-2"></i>Custom contracts</li>
+                    <li class="flex items-center"><i data-lucide="check" class="w-4 h-4 text-green-400 mr-2"></i>5% platform fee</li>
+                    <li class="flex items-center"><i data-lucide="check" class="w-4 h-4 text-green-400 mr-2"></i>Dedicated manager</li>
+                </ul>
+                <button class="w-full py-3 border border-white/20 rounded-full font-medium hover:bg-white/5 transition">Contact Sales</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="border-t border-white/10 mt-20 py-12 px-4">
+        <div class="max-w-7xl mx-auto grid md:grid-cols-4 gap-8">
+            <div>
+                <div class="flex items-center space-x-2 mb-4">
+                    <i data-lucide="zap" class="w-6 h-6 text-purple-400"></i>
+                    <span class="text-xl font-bold">GigFlow</span>
+                </div>
+                <p class="text-gray-400 text-sm">Empowering freelancers worldwide to monetize their skills and build successful careers.</p>
+            </div>
+            <div>
+                <h4 class="font-bold mb-4">For Freelancers</h4>
+                <ul class="space-y-2 text-sm text-gray-400">
+                    <li><a href="#" class="hover:text-white transition">Find Work</a></li>
+                    <li><a href="#" class="hover:text-white transition">Create Gig</a></li>
+                    <li><a href="#" class="hover:text-white transition">Pricing</a></li>
+                    <li><a href="#" class="hover:text-white transition">Resources</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="font-bold mb-4">For Clients</h4>
+                <ul class="space-y-2 text-sm text-gray-400">
+                    <li><a href="#" class="hover:text-white transition">Post a Job</a></li>
+                    <li><a href="#" class="hover:text-white transition">Find Talent</a></li>
+                    <li><a href="#" class="hover:text-white transition">Enterprise</a></li>
+                    <li><a href="#" class="hover:text-white transition">Success Stories</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="font-bold mb-4">Connect</h4>
+                <div class="flex space-x-4">
+                    <a href="#" class="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center hover:bg-white/10 transition">
+                        <i data-lucide="twitter" class="w-5 h-5"></i>
+                    </a>
+                    <a href="#" class="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center hover:bg-white/10 transition">
+                        <i data-lucide="linkedin" class="w-5 h-5"></i>
+                    </a>
+                    <a href="#" class="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center hover:bg-white/10 transition">
+                        <i data-lucide="instagram" class="w-5 h-5"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="max-w-7xl mx-auto mt-12 pt-8 border-t border-white/10 text-center text-sm text-gray-500">
+            © 2026 GigFlow. All rights reserved.
+        </div>
+    </footer>
+
+    <!-- Modals -->
+    <!-- Login Modal -->
+    <div id="loginModal" class="modal">
+        <div class="glass-card rounded-2xl p-8 max-w-md w-full mx-4 relative">
+            <button onclick="closeModal('loginModal')" class="absolute top-4 right-4 text-gray-400 hover:text-white">
+                <i data-lucide="x" class="w-6 h-6"></i>
+            </button>
+            <h2 class="text-2xl font-bold mb-6">Welcome Back</h2>
+            <form class="space-y-4" onsubmit="event.preventDefault(); closeModal('loginModal'); showNotification('Successfully logged in!');">
+                <div>
+                    <label class="block text-sm text-gray-400 mb-2">Email</label>
+                    <input type="email" class="w-full bg-white/5 border border-white/10 rounded-lg py-3 px-4 text-white focus:outline-none focus:border-purple-500" placeholder="you@example.com" required>
+                </div>
+                <div>
+                    <label class="block text-sm text-gray-400 mb-2">Password</label>
+                    <input type="password" class="w-full bg-white/5 border border-white/10 rounded-lg py-3 px-4 text-white focus:outline-none focus:border-purple-500" placeholder="••••••••" required>
+                </div>
+                <button type="submit" class="w-full bg-gradient-to-r from-purple-600 to-blue-600 py-3 rounded-lg font-semibold hover:shadow-lg transition">Sign In</button>
+            </form>
+            <p class="mt-4 text-center text-sm text-gray-400">Don't have an account? <button onclick="closeModal('loginModal'); openModal('signupModal')" class="text-purple-400 hover:underline">Sign up</button></p>
+        </div>
+    </div>
+
+    <!-- Signup Modal -->
+    <div id="signupModal" class="modal">
+        <div class="glass-card rounded-2xl p-8 max-w-md w-full mx-4 relative">
+            <button onclick="closeModal('signupModal')" class="absolute top-4 right-4 text-gray-400 hover:text-white">
+                <i data-lucide="x" class="w-6 h-6"></i>
+            </button>
+            <h2 class="text-2xl font-bold mb-6">Start Earning Today</h2>
+            <form class="space-y-4" onsubmit="event.preventDefault(); closeModal('signupModal'); showNotification('Account created! Welcome to GigFlow.');">
+                <div>
+                    <label class="block text-sm text-gray-400 mb-2">Full Name</label>
+                    <input type="text" class="w-full bg-white/5 border border-white/10 rounded-lg py-3 px-4 text-white focus:outline-none focus:border-purple-500" placeholder="John Doe" required>
+                </div>
+                <div>
+                    <label class="block text-sm text-gray-400 mb-2">Email</label>
+                    <input type="email" class="w-full bg-white/5 border border-white/10 rounded-lg py-3 px-4 text-white focus:outline-none focus:border-purple-500" placeholder="you@example.com" required>
+                </div>
+                <div>
+                    <label class="block text-sm text-gray-400 mb-2">Password</label>
+                    <input type="password" class="w-full bg-white/5 border border-white/10 rounded-lg py-3 px-4 text-white focus:outline-none focus:border-purple-500" placeholder="••••••••" required>
+                </div>
+                <button type="submit" class="w-full bg-gradient-to-r from-purple-600 to-blue-600 py-3 rounded-lg font-semibold hover:shadow-lg transition">Create Account</button>
+            </form>
+            <p class="mt-4 text-center text-sm text-gray-400">Already have an account? <button onclick="closeModal('signupModal'); openModal('loginModal')" class="text-purple-400 hover:underline">Sign in</button></p>
+        </div>
+    </div>
+
+    <!-- Gig Detail Modal -->
+    <div id="gigModal" class="modal">
+        <div class="glass-card rounded-2xl p-8 max-w-2xl w-full mx-4 relative max-h-[90vh] overflow-y-auto">
+            <button onclick="closeModal('gigModal')" class="absolute top-4 right-4 text-gray-400 hover:text-white">
+                <i data-lucide="x" class="w-6 h-6"></i>
+            </button>
+            <div class="flex items-center space-x-4 mb-6">
+                <div class="w-16 h-16 rounded-full bg-gradient-to-br from-purple-400 to-blue-400"></div>
+                <div>
+                    <h3 class="text-2xl font-bold">Website UI/UX Design</h3>
+                    <p class="text-gray-400">by Alex Morgan • Level 2 Seller</p>
+                </div>
+            </div>
+            <div class="grid md:grid-cols-3 gap-4 mb-6">
+                <div class="bg-white/5 rounded-lg p-4 text-center">
+                    <div class="text-2xl font-bold text-green-400">$299</div>
+                    <div class="text-xs text-gray-400">Basic Package</div>
+                </div>
+                <div class="bg-white/5 rounded-lg p-4 text-center border-2 border-purple-500">
+                    <div class="text-2xl font-bold text-green-400">$599</div>
+                    <div class="text-xs text-gray-400">Standard</div>
+                </div>
+                <div class="bg-white/5 rounded-lg p-4 text-center">
+                    <div class="text-2xl font-bold text-green-400">$999</div>
+                    <div class="text-xs text-gray-400">Premium</div>
+                </div>
+            </div>
+            <div class="space-y-4 mb-6">
+                <h4 class="font-bold">What's Included:</h4>
+                <ul class="space-y-2 text-gray-300">
+                    <li class="flex items-center"><i data-lucide="check" class="w-4 h-4 text-green-400 mr-2"></i>3 page website design</li>
+                    <li class="flex items-center"><i data-lucide="check" class="w-4 h-4 text-green-400 mr-2"></i>Figma source files</li>
+                    <li class="flex items-center"><i data-lucide="check" class="w-4 h-4 text-green-400 mr-2"></i>3 revisions included</li>
+                    <li class="flex items-center"><i data-lucide="check" class="w-4 h-4 text-green-400 mr-2"></i>Mobile responsive design</li>
+                </ul>
+            </div>
+            <button onclick="closeModal('gigModal'); showNotification('Order placed successfully!');" class="w-full bg-gradient-to-r from-purple-600 to-blue-600 py-4 rounded-lg font-bold text-lg hover:shadow-lg transition">Continue ($599)</button>
+        </div>
+    </div>
+
+    <!-- Notification Toast -->
+    <div id="notification" class="fixed bottom-4 right-4 bg-green-600 text-white px-6 py-3 rounded-lg shadow-lg transform translate-y-20 opacity-0 transition-all duration-300 z-50 flex items-center space-x-2">
+        <i data-lucide="check-circle" class="w-5 h-5"></i>
+        <span id="notificationText">Success!</span>
+    </div>
+
+    <script>
+        // Initialize Lucide icons
+        lucide.createIcons();
+
+        // Tab switching
+        function switchTab(tab) {
+            const earnTab = document.getElementById('tab-earn');
+            const hireTab = document.getElementById('tab-hire');
+            const earnContent = document.getElementById('content-earn');
+            const hireContent = document.getElementById('content-hire');
+
+            if (tab === 'earn') {
+                earnTab.classList.add('tab-active');
+                earnTab.classList.remove('text-gray-400');
+                hireTab.classList.remove('tab-active');
+                hireTab.classList.add('text-gray-400');
+                earnContent.classList.remove('hidden');
+                hireContent.classList.add('hidden');
+            } else {
+                hireTab.classList.add('tab-active');
+                hireTab.classList.remove('text-gray-400');
+                earnTab.classList.remove('tab-active');
+                earnTab.classList.add('text-gray-400');
+                hireContent.classList.remove('hidden');
+                earnContent.classList.add('hidden');
+            }
+        }
+
+        // Modal functions
+        function openModal(modalId) {
+            document.getElementById(modalId).classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+
+        // Close modal on outside click
+        window.onclick = function(event) {
+            if (event.target.classList.contains('modal')) {
+                event.target.classList.remove('active');
+                document.body.style.overflow = 'auto';
+            }
+        }
+
+        // Notification system
+        function showNotification(message) {
+            const notification = document.getElementById('notification');
+            const notificationText = document.getElementById('notificationText');
+            notificationText.textContent = message;
+            notification.classList.remove('translate-y-20', 'opacity-0');
+            setTimeout(() => {
+                notification.classList.add('translate-y-20', 'opacity-0');
+            }, 3000);
+        }
+
+        // Animated earnings counter
+        function animateEarnings() {
+            const counter = document.getElementById('totalEarnings');
+            let current = 2458392;
+            setInterval(() => {
+                current += Math.floor(Math.random() * 50) + 10;
+                counter.textContent = '$' + current.toLocaleString();
+            }, 3000);
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            animateEarnings();
+            
+            // Smooth scroll for anchor links
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const target = document.querySelector(this.getAttribute('href'));
+                    if (target) {
+                        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }
+                });
+            });
+        });
+
+        // Add scroll effect to navbar
+        window.addEventListener('scroll', () => {
+            const nav = document.querySelector('nav');
+            if (window.scrollY > 50) {
+                nav.classList.add('bg-black/80');
+            } else {
+                nav.classList.remove('bg-black/80');
+            }
+        });
+    </script>
+</body>
+</html>
